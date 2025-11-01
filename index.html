@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>간호사 화법 유형 테스트 (무작위 선택지)</title>
+<title>간호사 화법 유형 테스트</title>
 <style>
 body {
   font-family: 'Pretendard', sans-serif;
@@ -28,16 +28,25 @@ button {
   cursor: pointer;
 }
 button:hover { background-color: #3562c9; }
-#result { display: none; text-align: center; margin-top: 30px; }
+#quiz, #result { display: none; text-align: center; margin-top: 20px; }
 </style>
 </head>
 <body>
-<h1>👩‍⚕️ 간호사 화법 유형 테스트</h1>
+
+<!-- 시작 화면 -->
+<div id="startScreen">
+  <h1>👩‍⚕️ 간호사 화법 유형 테스트</h1>
+  <p>이 테스트를 통해 당신의 간호사 화법 유형을 확인할 수 있습니다.<br>아래 시작 버튼을 눌러 게임을 시작하세요!</p>
+  <button onclick="startGame()">▶️ 시작하기</button>
+</div>
+
+<!-- 질문 화면 -->
 <div id="quiz">
   <p id="question"></p>
   <div id="buttons"></div>
 </div>
 
+<!-- 결과 화면 -->
 <div id="result">
   <h2 id="resultTitle"></h2>
   <p id="resultDesc"></p>
@@ -54,7 +63,7 @@ const results = [
   {name:"❄️ 냉철한 간호사", desc:"감정보다는 상황 판단 중심, 효율을 중시하는 유형"}
 ];
 
-// 상황별 질문과 선택지
+// 질문과 선택지
 let questions = [
   {q:"상황 1: 환자가 치료를 거부합니다.", options:[
       {text:"“지금 치료 안 받으면 더 심해집니다.”", score:[0,1,0,1,0]},
@@ -79,7 +88,6 @@ let questions = [
     ]}
 ];
 
-// 배열 섞기 함수
 function shuffleArray(array){
   for(let i=array.length-1;i>0;i--){
     const j = Math.floor(Math.random()*(i+1));
@@ -91,16 +99,23 @@ function shuffleArray(array){
 let currentQ = 0;
 let score = [0,0,0,0,0];
 
+// 게임 시작
+function startGame(){
+  document.getElementById("startScreen").style.display="none";
+  document.getElementById("quiz").style.display="block";
+  showQuestion();
+}
+
 function showQuestion(){
   const q = questions[currentQ];
   document.getElementById("question").innerText = q.q;
   const btnsDiv = document.getElementById("buttons");
   btnsDiv.innerHTML = "";
-  let shuffledOptions = shuffleArray([...q.options]); // 선택지 무작위
+  let shuffledOptions = shuffleArray([...q.options]);
   shuffledOptions.forEach((opt)=>{
     const btn = document.createElement("button");
     btn.innerText = opt.text;
-    btn.onclick = ()=>choose(q.options.indexOf(opt)); // 실제 점수는 원본 index 기준
+    btn.onclick = ()=>choose(q.options.indexOf(opt));
     btnsDiv.appendChild(btn);
   });
 }
@@ -132,13 +147,9 @@ function showResult(){
 function restart(){
   score=[0,0,0,0,0];
   currentQ=0;
-  document.getElementById("quiz").style.display="block";
   document.getElementById("result").style.display="none";
-  showQuestion();
+  document.getElementById("startScreen").style.display="block";
 }
-
-// 시작
-showQuestion();
 </script>
 </body>
 </html>
